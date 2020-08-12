@@ -23,8 +23,9 @@ namespace CreditCardApplications
                 return CreditCardApplicationDecision.AutoAccepted;
             }
 
-            var isValidFrequentFlyerNumber =
-                _validator.isValid(application.FrequentFlyerNumber);
+            _validator.isValid(application.FrequentFlyerNumber,
+                out var isValidFrequentFlyerNumber);
+
             if (!isValidFrequentFlyerNumber)
             {
                 return CreditCardApplicationDecision.ReferredToHuman;

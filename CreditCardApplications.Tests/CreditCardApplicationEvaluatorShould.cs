@@ -69,7 +69,7 @@ namespace CreditCardApplications.Tests
         [Fact]
         public void ReferInvalidFrequentFlyerApplications()
         {
-            var mockValidator = 
+            var mockValidator =
                 new Mock<IFrequentlyFlyerNumberValidator>(MockBehavior.Strict);
 
             // MockBehavior.Strict obligates to setup a method:
@@ -83,6 +83,24 @@ namespace CreditCardApplications.Tests
             CreditCardApplicationDecision decision = sut.Evaluate(application);
 
             Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
+
+        [Fact]
+        public void DeclineLowIncomeApplicationsOutDemo()
+        {
+            var mockValidator =
+                new Mock<IFrequentlyFlyerNumberValidator>();
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+            var application = new CreditCardApplication
+            {
+                GrossAnnualIncome = 19_999,
+                Age = 42
+            };
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, decision);
         }
     }
 }
