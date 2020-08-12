@@ -40,8 +40,11 @@ namespace CreditCardApplications.Tests
 
             // mockValidator.Setup(x => x.isValid("x")).Returns(true);
             //mockValidator.Setup(x => x.isValid(It.IsAny<string>())).Returns(true);
+            //mockValidator
+            //    .Setup(x => x.isValid(It.Is<string>(number => number.StartsWith("y"))))
+            //    .Returns(true);
             mockValidator
-                .Setup(x => x.isValid(It.Is<string>(number => number.StartsWith("y"))))
+                .Setup(x => x.isValid(It.IsInRange("a", "z", Range.Inclusive)))
                 .Returns(true);
 
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
@@ -49,7 +52,7 @@ namespace CreditCardApplications.Tests
             {
                 GrossAnnualIncome = 19_999,
                 Age = 42,
-                FrequentFlyerNumber = "y"
+                FrequentFlyerNumber = "d"
             };
 
             CreditCardApplicationDecision decision = sut.Evaluate(application);
