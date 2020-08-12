@@ -72,6 +72,11 @@ namespace CreditCardApplications.Tests
             var mockValidator = 
                 new Mock<IFrequentlyFlyerNumberValidator>(MockBehavior.Strict);
 
+            // MockBehavior.Strict obligates to setup a method:
+
+            mockValidator.Setup(x => x.isValid(It.IsAny<string>()))
+                .Returns(false);
+
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
             var application = new CreditCardApplication();
 
