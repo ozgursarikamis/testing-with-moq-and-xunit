@@ -39,14 +39,17 @@ namespace CreditCardApplications.Tests
                 new Mock<IFrequentlyFlyerNumberValidator>();
 
             // mockValidator.Setup(x => x.isValid("x")).Returns(true);
-            mockValidator.Setup(x => x.isValid(It.IsAny<string>())).Returns(true);
+            //mockValidator.Setup(x => x.isValid(It.IsAny<string>())).Returns(true);
+            mockValidator
+                .Setup(x => x.isValid(It.Is<string>(number => number.StartsWith("y"))))
+                .Returns(true);
 
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
             var application = new CreditCardApplication
             {
                 GrossAnnualIncome = 19_999,
                 Age = 42,
-                FrequentFlyerNumber = "x"
+                FrequentFlyerNumber = "y"
             };
 
             CreditCardApplicationDecision decision = sut.Evaluate(application);
