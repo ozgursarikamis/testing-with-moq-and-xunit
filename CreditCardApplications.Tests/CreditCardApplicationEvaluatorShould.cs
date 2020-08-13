@@ -91,6 +91,9 @@ namespace CreditCardApplications.Tests
             var mockValidator =
                 new Mock<IFrequentlyFlyerNumberValidator>();
 
+            bool isValid = true;
+            mockValidator.Setup(x => x.isValid(It.IsAny<string>(), out isValid));
+
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
             var application = new CreditCardApplication
             {
