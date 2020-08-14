@@ -29,15 +29,15 @@ namespace CreditCardApplications
                 return CreditCardApplicationDecision.ReferredToHuman;
             }
 
-            //_validator.ValidationMode = application.Age >= 30 ? ValidationMode.Detailed : ValidationMode.Quick;
+            _validator.ValidationMode = application.Age >= 30 ? ValidationMode.Detailed : ValidationMode.Quick;
 
-            //var isValidFrequentFlyerNumber =
-            //    _validator.isValid(application.FrequentFlyerNumber);
+            var isValidFrequentFlyerNumber =
+                _validator.isValid(application.FrequentFlyerNumber);
 
-            //if (!isValidFrequentFlyerNumber)
-            //{
-            //    return CreditCardApplicationDecision.ReferredToHuman;
-            //}
+            if (!isValidFrequentFlyerNumber)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
 
             if (application.Age <= AutoReferralMaxAge)
             {
