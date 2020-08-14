@@ -174,15 +174,13 @@ namespace CreditCardApplications.Tests
 
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
 
-            var application = new CreditCardApplication
-            {
-                FrequentFlyerNumber = "Q"
-            };
-
+            var application = new CreditCardApplication();
+            
             sut.Evaluate(application);
 
              // is isValid method called?
-             mockValidator.Verify(x => x.isValid(It.IsAny<string>()));
+             mockValidator.Verify(x => x.isValid(null), 
+                 "this is an error message when test fails");
         }
     }
 }
