@@ -1,3 +1,4 @@
+using System.Xml.Linq;
 using Moq;
 using Xunit;
 
@@ -238,6 +239,25 @@ namespace CreditCardApplications.Tests
             mockValidator.VerifySet(x => x.ValidationMode = It.IsAny<ValidationMode>());
 
             mockValidator.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void ThrowingExceptions()
+        {
+            Mock<IFrequentlyFlyerNumberValidator> validator =
+                new Mock<IFrequentlyFlyerNumberValidator>();
+
+            validator.Setup(x => x.ServiceInformation.License.LicenseKey)
+                .Returns("OK");
+            validator.Setup(x => x.isValid(It.IsAny<string>()))
+                .Returns(true);
+
+            var sut = new CreditCardApplicationEvaluator(validator.Object);
+            var application = new CreditCardApplication {Age = 42};
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+            
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
         }
     }
 }
