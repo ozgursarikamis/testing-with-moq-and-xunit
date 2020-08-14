@@ -12,10 +12,14 @@ namespace CreditCardApplications
 
         public int ValidatorLookupCount { get; private set; }
 
-        public CreditCardApplicationEvaluator(IFrequentlyFlyerNumberValidator validator)
+        private readonly FraudLookup _fraudLookup;
+
+        public CreditCardApplicationEvaluator(IFrequentlyFlyerNumberValidator validator, 
+            FraudLookup fraudLookup = null)
         {
             _validator = validator
                          ?? throw new ArgumentNullException(nameof(validator));
+            _fraudLookup = fraudLookup;
             _validator.ValidatorLookupPerformed += ValidatorLookupPerformed;
         }
 
@@ -26,6 +30,10 @@ namespace CreditCardApplications
 
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
         {
+            if (_fraudLookup != null && _fraudLookup.IsFraudRisk(application))
+            {
+                return CreditCardApplicationDecision.ReferredToHumanFraudRisk;
+            }
 
             if (application.GrossAnnualIncome >= HighIncomeThreshold)
             {

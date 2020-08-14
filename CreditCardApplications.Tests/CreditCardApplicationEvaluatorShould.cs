@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using Moq;
 using Xunit;
-using Xunit.Sdk;
 
 namespace CreditCardApplications.Tests
 {
@@ -339,6 +337,24 @@ namespace CreditCardApplications.Tests
 
             // Assert that isValid was called 3 times for aa, bb, cc values.
             Assert.Equal(new List<string> {"aa", "bb", "cc"}, frequentFlyerNumbersPassed);
+        }
+
+        [Fact]
+        public void TestingConcreteClass()
+        {
+            var validator = new Mock<IFrequentlyFlyerNumberValidator>();
+            var mockFraudLookup = new Mock<FraudLookup>();
+            mockFraudLookup.Setup(x => x.IsFraudRisk(It.IsAny<CreditCardApplication>()))
+                .Returns(true);
+
+            var sut = new CreditCardApplicationEvaluator(
+                validator.Object, mockFraudLookup.Object);
+
+            var application = new CreditCardApplication();
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHumanFraudRisk, decision);
         }
     }
 }
