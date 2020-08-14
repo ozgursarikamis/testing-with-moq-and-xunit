@@ -8,6 +8,7 @@ namespace CreditCardApplications
         void isValid(string frequentFlyerNumber, out bool isValid);
         // string LicenseKey { get; }
         IServiceInformation ServiceInformation { get; }
+        ValidationMode ValidationMode { get; set; }
     }
 
     public interface ILicenseData
@@ -41,5 +42,11 @@ namespace CreditCardApplications
         //}
 
         public IServiceInformation ServiceInformation => throw new NotImplementedException();
+
+        public ValidationMode ValidationMode
+        {
+            get => throw new NotImplementedException("for demo purposes");
+            set => throw new NotImplementedException("for demo purposes");
+        }
     }
 }

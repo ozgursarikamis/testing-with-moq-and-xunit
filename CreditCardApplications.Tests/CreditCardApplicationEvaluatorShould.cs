@@ -125,7 +125,7 @@ namespace CreditCardApplications.Tests
 
             var mockValidator = new Mock<IFrequentlyFlyerNumberValidator>();
             mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey)
-                .Returns("EXPIRED");
+                .Returns(GetLicenseKeyExpiryString);
             mockValidator.Setup(x => x.isValid(It.IsAny<string>()))
                 .Returns(true);
 
@@ -137,6 +137,32 @@ namespace CreditCardApplications.Tests
             Assert.Equal(
                 CreditCardApplicationDecision.ReferredToHuman, desicion
                 );
+        }
+
+        private string GetLicenseKeyExpiryString()
+        {
+            return "EXPIRED";
+        }
+
+        [Fact]
+        public void UseDetailedLookupForOlderApplications()
+        {
+            var mockValidator = new Mock<IFrequentlyFlyerNumberValidator>();
+            
+            // SetUpProperty tells our mock object to start tracking that property.
+            // mockValidator.SetupProperty(x => x.ValidationMode);
+            mockValidator.SetupAllProperties();
+
+            mockValidator
+                .Setup(x => x.ServiceInformation.License.LicenseKey)
+                .Returns("OK");
+            
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication{ Age = 30 };
+            sut.Evaluate(application);
+
+            Assert.Equal(ValidationMode.Detailed, mockValidator.Object.ValidationMode);
         }
     }
 }
