@@ -18,6 +18,7 @@ namespace CreditCardApplications
 
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
         {
+
             if (application.GrossAnnualIncome >= HighIncomeThreshold)
             {
                 return CreditCardApplicationDecision.AutoAccepted;
@@ -28,11 +29,10 @@ namespace CreditCardApplications
                 return CreditCardApplicationDecision.ReferredToHuman;
             }
 
-            _validator.ValidationMode =
-                application.Age >= 30 ? ValidationMode.Detailed : ValidationMode.Quick;
+            _validator.ValidationMode = application.Age >= 30 ? ValidationMode.Detailed : ValidationMode.Quick;
 
-            _validator.isValid(application.FrequentFlyerNumber,
-                out var isValidFrequentFlyerNumber);
+            var isValidFrequentFlyerNumber =
+                _validator.isValid(application.FrequentFlyerNumber);
 
             if (!isValidFrequentFlyerNumber)
             {

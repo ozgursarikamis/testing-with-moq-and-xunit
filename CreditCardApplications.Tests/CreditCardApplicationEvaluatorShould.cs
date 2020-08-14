@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic;
 using Moq;
 using Xunit;
 
@@ -163,6 +164,23 @@ namespace CreditCardApplications.Tests
             sut.Evaluate(application);
 
             Assert.Equal(ValidationMode.Detailed, mockValidator.Object.ValidationMode);
+        }
+
+        [Fact]
+        public void ValidateFrequentFlyerNumberForLowIncomeApplications()
+        {
+            var mockValidator = new Mock<IFrequentlyFlyerNumberValidator>();
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey)
+                .Returns("OK");
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication();
+
+            sut.Evaluate(application);
+
+             // is isValid method called?
+             mockValidator.Verify(x => x.isValid(null));
         }
     }
 }
