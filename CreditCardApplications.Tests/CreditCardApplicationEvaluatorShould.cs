@@ -109,11 +109,18 @@ namespace CreditCardApplications.Tests
         [Fact]
         public void ReferenceLicenseKeyExpired()
         {
+            var mockLicenseData = new Mock<ILicenseData>();
+            mockLicenseData.Setup(x => x.LicenseKey).Returns("EXPIRED");
+
+            var mockServiceInfo = new Mock<IServiceInformation>();
+            mockServiceInfo.Setup(x => x.License).Returns(mockLicenseData.Object);
+
             var mockValidator = new Mock<IFrequentlyFlyerNumberValidator>();
-            mockValidator.Setup(x => x.isValid(It.IsAny<string>())).Returns(true);
-            mockValidator.Setup(x => x.LicenseKey).Returns("EXPIRED");
+
+            mockValidator.Setup(x => x.ServiceInformation).Returns(mockServiceInfo.Object);
 
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
             var application = new CreditCardApplication{ Age = 42 };
 
             CreditCardApplicationDecision desicion = sut.Evaluate(application);
