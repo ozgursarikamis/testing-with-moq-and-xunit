@@ -1,3 +1,4 @@
+using System;
 using System.Xml.Linq;
 using Moq;
 using Xunit;
@@ -250,7 +251,8 @@ namespace CreditCardApplications.Tests
             validator.Setup(x => x.ServiceInformation.License.LicenseKey)
                 .Returns("OK");
             validator.Setup(x => x.isValid(It.IsAny<string>()))
-                .Returns(true);
+                .Throws(
+                    new Exception("Custom test message"));
 
             var sut = new CreditCardApplicationEvaluator(validator.Object);
             var application = new CreditCardApplication {Age = 42};
