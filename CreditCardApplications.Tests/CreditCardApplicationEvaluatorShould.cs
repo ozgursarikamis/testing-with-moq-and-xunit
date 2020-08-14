@@ -218,6 +218,7 @@ namespace CreditCardApplications.Tests
 
             mockValidator.VerifyGet(x => x.ServiceInformation.License.LicenseKey);
         }
+
         [Fact]
         public void ValidateIfPropertySetterIsSet()
         {
@@ -233,7 +234,10 @@ namespace CreditCardApplications.Tests
             };
             sut.Evaluate(application);
 
-            mockValidator.VerifySet(x => x.ValidationMode = ValidationMode.Detailed);
+            // mockValidator.VerifySet(x => x.ValidationMode = ValidationMode.Detailed);
+            mockValidator.VerifySet(x => x.ValidationMode = It.IsAny<ValidationMode>());
+
+            mockValidator.VerifyNoOtherCalls();
         }
     }
 }
