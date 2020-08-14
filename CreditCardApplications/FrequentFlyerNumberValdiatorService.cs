@@ -9,6 +9,7 @@ namespace CreditCardApplications
         // string LicenseKey { get; }
         IServiceInformation ServiceInformation { get; }
         ValidationMode ValidationMode { get; set; }
+        event EventHandler ValidatorLookupPerformed;
     }
 
     public interface ILicenseData
@@ -48,5 +49,7 @@ namespace CreditCardApplications
             get => throw new NotImplementedException("for demo purposes");
             set => throw new NotImplementedException("for demo purposes");
         }
+
+        public event EventHandler ValidatorLookupPerformed;
     }
 }
