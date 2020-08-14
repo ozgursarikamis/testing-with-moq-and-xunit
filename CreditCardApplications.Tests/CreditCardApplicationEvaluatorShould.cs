@@ -276,7 +276,10 @@ namespace CreditCardApplications.Tests
             {
                 FrequentFlyerNumber = "x", Age = 25
             };
+            
             sut.Evaluate(application);
+            validator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+
 
             Assert.Equal(1, sut.ValidatorLookupCount);
         }
