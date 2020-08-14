@@ -275,14 +275,37 @@ namespace CreditCardApplications.Tests
             var sut = new CreditCardApplicationEvaluator(validator.Object);
             var application = new CreditCardApplication
             {
-                FrequentFlyerNumber = "x", Age = 25
+                FrequentFlyerNumber = "x",
+                Age = 25
             };
-            
+
             sut.Evaluate(application);
             // validator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
 
 
             Assert.Equal(1, sut.ValidatorLookupCount);
+        }
+
+        [Fact]
+        public void DifferentResultForSequentialCalls()
+        {
+            var validator = new Mock<IFrequentlyFlyerNumberValidator>();
+            validator.Setup(x => x.ServiceInformation.License.LicenseKey)
+                .Returns("OK");
+            validator.Setup(x => x.isValid(It.IsAny<string>()))
+                .Returns(false);
+
+            var sut = new CreditCardApplicationEvaluator(validator.Object);
+            var application = new CreditCardApplication
+            { 
+                Age = 25
+            };
+
+            CreditCardApplicationDecision firstDecision = sut.Evaluate(application);
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, firstDecision);
+
+            CreditCardApplicationDecision secondDecision = sut.Evaluate(application);
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, secondDecision);
         }
     }
 }
