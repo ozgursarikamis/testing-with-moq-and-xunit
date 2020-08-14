@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using Moq;
 using Xunit;
 
@@ -175,12 +174,15 @@ namespace CreditCardApplications.Tests
 
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
 
-            var application = new CreditCardApplication();
+            var application = new CreditCardApplication
+            {
+                FrequentFlyerNumber = "Q"
+            };
 
             sut.Evaluate(application);
 
              // is isValid method called?
-             mockValidator.Verify(x => x.isValid(null));
+             mockValidator.Verify(x => x.isValid(It.IsAny<string>()));
         }
     }
 }
