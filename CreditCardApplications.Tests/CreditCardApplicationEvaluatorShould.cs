@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using Moq;
 using Xunit;
+using Xunit.Sdk;
 
 namespace CreditCardApplications.Tests
 {
@@ -298,7 +300,7 @@ namespace CreditCardApplications.Tests
 
             var sut = new CreditCardApplicationEvaluator(validator.Object);
             var application = new CreditCardApplication
-            { 
+            {
                 Age = 25
             };
 
@@ -307,6 +309,36 @@ namespace CreditCardApplications.Tests
 
             CreditCardApplicationDecision secondDecision = sut.Evaluate(application);
             Assert.Equal(CreditCardApplicationDecision.AutoDeclined, secondDecision);
+        }
+
+        [Fact]
+        public void MultipleCallSequence()
+        {
+            var validator = new Mock<IFrequentlyFlyerNumberValidator>();
+            validator.Setup(x => x.ServiceInformation.License.LicenseKey)
+                .Returns("OK");
+            
+            var frequentFlyerNumbersPassed = new List<string>();
+            validator.Setup(x => x.isValid(Capture.In(frequentFlyerNumbersPassed)));
+
+            var sut = new CreditCardApplicationEvaluator(validator.Object);
+            
+            var application1 = new CreditCardApplication {
+                Age = 25, FrequentFlyerNumber = "aa"
+            };
+            var application2 = new CreditCardApplication {
+                Age = 25, FrequentFlyerNumber = "bb"
+            };
+            var application3 = new CreditCardApplication {
+                Age = 25, FrequentFlyerNumber = "cc"
+            };
+
+            sut.Evaluate(application1);
+            sut.Evaluate(application2);
+            sut.Evaluate(application3);
+
+            // Assert that isValid was called 3 times for aa, bb, cc values.
+            Assert.Equal(new List<string> {"aa", "bb", "cc"}, frequentFlyerNumbersPassed);
         }
     }
 }
