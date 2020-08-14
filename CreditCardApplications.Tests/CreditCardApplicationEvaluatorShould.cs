@@ -269,7 +269,8 @@ namespace CreditCardApplications.Tests
             validator.Setup(x => x.ServiceInformation.License.LicenseKey)
                 .Returns("OK");
             validator.Setup(x => x.isValid(It.IsAny<string>()))
-                .Returns(true);
+                .Returns(true)
+                .Raises(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
 
             var sut = new CreditCardApplicationEvaluator(validator.Object);
             var application = new CreditCardApplication
@@ -278,7 +279,7 @@ namespace CreditCardApplications.Tests
             };
             
             sut.Evaluate(application);
-            validator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+            // validator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
 
 
             Assert.Equal(1, sut.ValidatorLookupCount);
