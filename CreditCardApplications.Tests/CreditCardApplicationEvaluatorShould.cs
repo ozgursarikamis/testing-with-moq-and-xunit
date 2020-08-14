@@ -292,8 +292,9 @@ namespace CreditCardApplications.Tests
             var validator = new Mock<IFrequentlyFlyerNumberValidator>();
             validator.Setup(x => x.ServiceInformation.License.LicenseKey)
                 .Returns("OK");
-            validator.Setup(x => x.isValid(It.IsAny<string>()))
-                .Returns(false);
+            validator.SetupSequence(x => x.isValid(It.IsAny<string>()))
+                .Returns(false)
+                .Returns(true);
 
             var sut = new CreditCardApplicationEvaluator(validator.Object);
             var application = new CreditCardApplication
