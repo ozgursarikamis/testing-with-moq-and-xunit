@@ -24,6 +24,8 @@ namespace CreditCardApplications.Tests
             var mockValidator =
                 new Mock<IFrequentlyFlyerNumberValidator>();
 
+            mockValidator.DefaultValue = DefaultValue.Mock;
+
             var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
             var application = new CreditCardApplication { Age = 19 };
 
@@ -37,6 +39,9 @@ namespace CreditCardApplications.Tests
         {
             Mock<IFrequentlyFlyerNumberValidator> mockValidator =
                 new Mock<IFrequentlyFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey)
+                .Returns("OK");
 
             // mockValidator.Setup(x => x.isValid("x")).Returns(true);
             //mockValidator.Setup(x => x.isValid(It.IsAny<string>())).Returns(true);
@@ -70,7 +75,10 @@ namespace CreditCardApplications.Tests
         public void ReferInvalidFrequentFlyerApplications()
         {
             var mockValidator =
-                new Mock<IFrequentlyFlyerNumberValidator>(MockBehavior.Strict);
+                new Mock<IFrequentlyFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey)
+                .Returns("OK");
 
             // MockBehavior.Strict obligates to setup a method:
 
